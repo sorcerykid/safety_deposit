@@ -4,7 +4,7 @@ By Leslie E. Krause
 Safety Deposit integrates with the Simple Cipher Mod to provide an additional layer of 
 security for itemstack metadata via block-chain encryption. 
 
-Since container inventories are sent to every connected client, it is entirely possible
+Since container inventories are sent to every connected client, it is possible to use
 either client-side modding or local map-saving to examine the contents of locked chests, 
 mailboxes, etc. This has the potential to expose sensitive personal information, as in the 
 case of written books which are often used for communication between players.
@@ -17,7 +17,7 @@ API functions, both of which supply the administrator username as the public key
     string to the itemstack meta.
 
   * safety_deposit.decrypt_metadata( itemstack )
-    Decrypts and deserializes the itemstack meta. As a fallback, in case the meta is not
+    Decrypts and deserializes the itemstack meta. As a fallback, in case the string is not
     actually encrypted, it will simply be deserialized.
 
 If someone happens to obtain a copy of the map (without the private key of the server 
@@ -25,8 +25,7 @@ owner), then it will be virtually impossible, outside of a sophisticated brute-f
 attack, to fully extract the metedata of these items once encrypted.
 
 A digital safe can also be crafted for even higher-grade security. This container, once 
-placed in world, encrypts its entire inventory, thereby thwarting unwanted intruders.
-
+placed in world, encrypts its entire inventory, thereby thwarting any unwanted intruders. 
 The only means of access is by a 4-digit PIN which only the owner (or team-members) will 
 possibly know. Even the administrator cannot retrieve the access code if forgotten, so it
 is very important to write the number down immediatly after engaging the lock.
@@ -56,7 +55,7 @@ Default Mod (required)
 ActiveFormspecs Mod (required)
   https://bitbucket.org/sorcerykid/formspecs
 
-Simple Cipher Mod (required)
+Simple Cipher Mod (optional)
   https://bitbucket.org/sorcerykid/cipher
 
 Installation
@@ -123,6 +122,36 @@ Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
 
    /textures/safe_side.png
    obtained from https://gitlab.com/VanessaE/currency/
+
+   /textures/counter_0.png
+   by sorcerykid
+
+   /textures/counter_1.png
+   by sorcerykid
+
+   /textures/counter_3.png
+   by sorcerykid
+
+   /textures/counter_4.png
+   by sorcerykid
+
+   /textures/counter_5.png
+   by sorcerykid
+
+   /textures/counter_6.png
+   by sorcerykid
+
+   /textures/counter_7.png
+   by sorcerykid
+
+   /textures/counter_8.png
+   by sorcerykid
+
+   /textures/counter_9.png
+   by sorcerykid
+
+   /textures/counter_nil.png
+   by sorcerykid
 
 You are free to:
 Share — copy and redistribute the material in any medium or format.
