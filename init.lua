@@ -7,29 +7,14 @@
 -- ./games/minetest_game/mods/safety_deposit/init.lua
 --------------------------------------------------------
 
-local username = minetest.setting_get( "name" )	-- used as public key for encryption
-
------------------------
-
 safety_deposit = { }
 
-safety_deposit.encrypt_metadata = function ( itemstack, data )
-	local raw_data = cipher.encrypt_to_base64( minetest.serialize( data ), username )
-	itemstack:set_metadata( raw_data )
-end
-
-safety_deposit.decrypt_metadata = function ( itemstack )
-	local raw_data = itemstack:get_metadata( )
-	if cipher.is_encrypted( raw_data ) then
-		return minetest.deserialize( cipher.decrypt_from_base64( raw_data, username ) )
-	else
-		return minetest.deserialize( raw_data )
-	end
-end
-
------------------------
-
+local username = minetest.setting_get( "name" )	-- used as public key for encryption
 local disabled_safes = { }
+
+---------------------
+-- private methods --
+---------------------
 
 local function open_safe_viewer( pos, player_name, access_code, safe_inv )
 
@@ -97,7 +82,7 @@ local function open_safe_viewer( pos, player_name, access_code, safe_inv )
 	minetest.create_form( nil, player_name, get_formspec( ), on_close )
 end
 
-local function open_safe_signin( pos, player_name )
+local function open_safe_prompt( pos, player_name )
 	local digits = { }
 
         local function get_formspec( )
@@ -209,12 +194,38 @@ local function open_safe_signin( pos, player_name )
 	minetest.create_form( nil, player_name, get_formspec( ), on_close )
 end
 
+--------------------
+-- public methods --
+--------------------
+
+safety_deposit.encrypt_metadata = function ( itemstack, data )
+	local raw_data = cipher.encrypt_to_base64( minetest.serialize( data ), username )
+	itemstack:set_metadata( raw_data )
+end
+
+safety_deposit.decrypt_metadata = function ( itemstack )
+	local raw_data = itemstack:get_metadata( )
+	if cipher.is_encrypted( raw_data ) then
+		return minetest.deserialize( cipher.decrypt_from_base64( raw_data, username ) )
+	else
+		return minetest.deserialize( raw_data )
+	end
+end
+
+--------------------------
+-- registered callbacks --
+--------------------------
+
 minetest.register_on_joinplayer( function( player )
 	local player_name = player:get_player_name( )
 	local safe_inv = minetest.create_detached_inventory( player_name .. "_safe", { }, player_name )
 
 	safe_inv:set_size( "main", 16 )
 end )
+
+----------------------
+-- registered nodes --
+----------------------
 
 minetest.register_node( "safety_deposit:digital_safe", {
 	-- https://gitlab.com/VanessaE/currency/
@@ -254,7 +265,17 @@ minetest.register_node( "safety_deposit:digital_safe", {
 		if disabled_safes[ safe_id ] == player_name then
 			minetest.chat_send_player( player_name, "This safe has been disabled. Please try again later." )
 		else
-			open_safe_signin( pos, player_name )
+			open_safe_prompt( pos, player_name )
 		end
 	end,
+	on_blast = function( ) end,	-- protect against TNT explosions
+} )
+
+minetest.register_craft( {
+	output = "safety_deposit:digital_safe",
+	recipe = {
+		{ "default:steelblock", "default:steelblock", "default:steelblock" },
+		{ "default:steelblock", "default:mese", "default:obsidian" },
+		{ "default:steelblock", "default:steelblock", "default:steelblock" },
+	}
 } )
